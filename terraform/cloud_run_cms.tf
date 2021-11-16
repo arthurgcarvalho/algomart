@@ -1,5 +1,5 @@
 resource "google_storage_bucket" "cms_bucket" {
-  name     = var.cms_storage_bucket
+  name     = data.google_secret_manager_secret_version.cms_storage_bucket.secret_data
   project  = var.project
   location = var.bucket_location
 
@@ -17,7 +17,7 @@ resource "google_cloud_run_service" "cms" {
 
   template {
     metadata {
-      name = var.cms_revision_name
+      name = "${var.cms_revision_name}-${random_integer.random-integer.result}"
 
       annotations = {
         "run.googleapis.com/vpc-access-connector" = var.vpc_access_connector_name
@@ -30,16 +30,16 @@ resource "google_cloud_run_service" "cms" {
 
     spec {
       containers {
-        image = var.cms_image
+        image = data.google_secret_manager_secret_version.cms_image.secret_data
 
         env {
           name  = "ADMIN_EMAIL"
-          value = var.cms_admin_email
+          value = data.google_secret_manager_secret_version.cms_admin_email.secret_data
         }
 
         env {
           name  = "ADMIN_PASSWORD"
-          value = var.cms_admin_password
+          value = data.google_secret_manager_secret_version.cms_admin_password.secret_data
         }
 
         # Directus supports a `DB_CONNECTION_STRING` env var that takes precedence over these,
@@ -76,7 +76,7 @@ resource "google_cloud_run_service" "cms" {
 
         env {
           name  = "KEY"
-          value = var.cms_key
+          value = data.google_secret_manager_secret_version.cms_key.secret_data
         }
 
         env {
@@ -88,15 +88,15 @@ resource "google_cloud_run_service" "cms" {
           name  = "NODE_ENV"
           value = var.cms_node_env
         }
-
+/*
         env {
           name  = "PUBLIC_URL"
           value = "https://${var.cms_domain_mapping}"
         }
-
+*/
         env {
           name  = "SECRET"
-          value = var.cms_secret
+          value = data.google_secret_manager_secret_version.cms_secret.secret_data
         }
 
         # The "locations" value is a comma-separate string of arbitrary values.
@@ -126,7 +126,7 @@ resource "google_cloud_run_service" "cms" {
 
         env {
           name  = "STORAGE_GCP_CREDENTIALS"
-          value = var.credentials
+          value = file("qam-project-331620-d0305e36e224.json") // should be pass through github secrets
         }
       }
     }
@@ -143,7 +143,7 @@ resource "google_cloud_run_service" "cms" {
     google_vpc_access_connector.connector,
   ]
 }
-
+/*
 resource "google_cloud_run_domain_mapping" "cms" {
   location = var.region
   name     = var.cms_domain_mapping
@@ -156,7 +156,7 @@ resource "google_cloud_run_domain_mapping" "cms" {
     route_name = google_cloud_run_service.cms.name
   }
 }
-
+*/
 resource "google_cloud_run_service_iam_member" "cms_all_users" {
   service  = google_cloud_run_service.cms.name
   location = google_cloud_run_service.cms.location

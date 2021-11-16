@@ -6,7 +6,7 @@ resource "google_cloud_run_service" "api" {
 
   template {
     metadata {
-      name = var.api_revision_name
+      name = "${var.api_revision_name}-${random_integer.random-integer.result}"
 
       annotations = {
         "run.googleapis.com/vpc-access-connector" = var.vpc_access_connector_name
@@ -48,50 +48,50 @@ resource "google_cloud_run_service" "api" {
 
     spec {
       containers {
-        image = var.api_image
+        image = data.google_secret_manager_secret_version.api_image.secret_data
 
         env {
           name  = "ALGOD_SERVER"
-          value = var.algod_host
+          value = data.google_secret_manager_secret_version.algod_host.secret_data
         }
 
         env {
           name  = "ALGOD_PORT"
-          value = var.algod_port
+          value = data.google_secret_manager_secret_version.algod_port.secret_data
         }
 
         env {
           name  = "ALGOD_TOKEN"
-          value = var.algod_key
+          value = data.google_secret_manager_secret_version.algod_key.secret_data
         }
 
         env {
           name  = "API_KEY"
-          value = var.api_key
+          value = data.google_secret_manager_secret_version.api_key.secret_data
         }
 
         env {
           name  = "CIRCLE_API_KEY"
-          value = var.circle_key
+          value = data.google_secret_manager_secret_version.circle_key.secret_data
         }
         env {
           name  = "CIRCLE_URL"
-          value = var.circle_url
+          value = data.google_secret_manager_secret_version.circle_url.secret_data
         }
 
         env {
           name  = "CMS_ACCESS_TOKEN"
-          value = var.cms_key
+          value = data.google_secret_manager_secret_version.cms_key.secret_data
         }
-
+/*
         env {
           name  = "CMS_URL"
           value = "https://${var.cms_domain_mapping}"
         }
-
+*/
         env {
           name  = "CREATOR_PASSPHRASE"
-          value = var.api_creator_passphrase
+          value = data.google_secret_manager_secret_version.api_creator_passphrase.secret_data
         }
 
         env {
@@ -101,12 +101,12 @@ resource "google_cloud_run_service" "api" {
 
         env {
           name  = "DATABASE_SCHEMA"
-          value = var.api_database_schema
+          value = data.google_secret_manager_secret_version.api_database_schema.secret_data
         }
 
         env {
           name  = "FUNDING_MNEMONIC"
-          value = var.api_funding_mnemonic
+          value = data.google_secret_manager_secret_version.api_funding_mnemonic.secret_data
         }
 
         env {
@@ -121,24 +121,24 @@ resource "google_cloud_run_service" "api" {
 
         env {
           name  = "SECRET"
-          value = var.api_secret
+          value = data.google_secret_manager_secret_version.api_secret.secret_data
         }
 
         env {
           name  = "SENDGRID_API_KEY"
-          value = var.sendgrid_key
+          value = data.google_secret_manager_secret_version.sendgrid_key.secret_data
         }
 
         env {
           name  = "SENDGRID_FROM_EMAIL"
-          value = var.sendgrid_from_email
+          value = data.google_secret_manager_secret_version.sendgrid_from_email.secret_data
         }
-
+/*
         env {
           name  = "WEB_URL"
           value = "https://${var.web_domain_mapping}"
         }
-
+*/
         env {
           name  = "LOG_LEVEL"
           value = "debug"
@@ -158,7 +158,7 @@ resource "google_cloud_run_service" "api" {
     google_vpc_access_connector.connector,
   ]
 }
-
+/*
 resource "google_cloud_run_domain_mapping" "api" {
   location = var.region
   name     = var.api_domain_mapping
@@ -171,7 +171,7 @@ resource "google_cloud_run_domain_mapping" "api" {
     route_name = google_cloud_run_service.api.name
   }
 }
-
+*/
 resource "google_cloud_run_service_iam_member" "api_all_users" {
   service  = google_cloud_run_service.api.name
   location = google_cloud_run_service.api.location

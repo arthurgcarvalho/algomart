@@ -6,31 +6,31 @@ resource "google_cloud_run_service" "web" {
 
   template {
     metadata {
-      name = var.web_revision_name
+      name = "${var.web_revision_name}-${random_integer.random-integer.result}"
     }
 
     spec {
       containers {
-        image = var.web_image
+        image = data.google_secret_manager_secret_version.web_image.secret_data
 
         env {
           name  = "API_KEY"
-          value = var.api_key
+          value = data.google_secret_manager_secret_version.api_key.secret_data
         }
-
+/*
         env {
           name  = "API_URL"
           value = "https://${var.api_domain_mapping}"
         }
-
+*/
         env {
           name  = "FIREBASE_SERVICE_ACCOUNT"
-          value = var.web_firebase_service_account
+          value = data.google_secret_manager_secret_version.web-firebase-service-account.secret_data
         }
 
         env {
           name  = "IMAGE_DOMAINS"
-          value = "lh3.googleusercontent.com,firebasestorage.googleapis.com,${var.cms_domain_mapping}"
+          value = "lh3.googleusercontent.com,firebasestorage.googleapis.com,"//${var.cms_domain_mapping}"
         }
 
         env {
@@ -40,7 +40,7 @@ resource "google_cloud_run_service" "web" {
 
         env {
           name  = "NEXT_PUBLIC_FIREBASE_CONFIG"
-          value = var.web_next_public_firebase_config
+          value = data.google_secret_manager_secret_version.web_next_public_firebase_config.secret_data
         }
 
         env {
@@ -60,7 +60,7 @@ resource "google_cloud_run_service" "web" {
     google_project_service.run_api,
   ]
 }
-
+/*
 resource "google_cloud_run_domain_mapping" "web" {
   location = var.region
   name     = var.web_domain_mapping
@@ -73,7 +73,7 @@ resource "google_cloud_run_domain_mapping" "web" {
     route_name = google_cloud_run_service.web.name
   }
 }
-
+*/
 resource "google_cloud_run_service_iam_member" "web_all_users" {
   service  = google_cloud_run_service.web.name
   location = google_cloud_run_service.web.location

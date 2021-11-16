@@ -5,6 +5,7 @@
 # rather than which *are*.
 
 variable "project" {
+  default   = "qam-project-331620"
   sensitive = true
 }
 
@@ -19,12 +20,12 @@ variable "bucket_location" {
   default   = "US"
   sensitive = true
 }
-
+/*
 # The service account credentials for terraform
 variable "credentials" {
   sensitive = true
 }
-
+*/
 variable "disable_apis_on_destroy" {
   default   = false
   sensitive = true
@@ -48,7 +49,7 @@ variable "cms_service_name" {
 }
 
 variable "database_server_name" {
-  default   = "algomart"
+  default   = "algomart2"
   sensitive = true
 }
 
@@ -97,82 +98,13 @@ variable "database_max_connections" {
 ## API service
 ##
 
-variable "algod_host" {
-  sensitive = true
-}
-
-variable "algod_key" {
-  sensitive = true
-}
-
-variable "algod_port" {
-  sensitive = true
-}
-
-variable "api_creator_passphrase" {
-  sensitive = true
-}
-
-variable "api_database_name" {
-  default   = "algorand_marketplace_api"
-  sensitive = true
-}
-
-variable "api_database_schema" {
-  default   = "public"
-  sensitive = true
-}
-
-variable "api_database_user_name" {
-  sensitive = true
-}
-
-variable "api_database_user_password" {
-  sensitive = true
-}
-
-variable "api_domain_mapping" {
-  sensitive = true
-}
-
-variable "api_funding_mnemonic" {
-  sensitive = true
-}
-
-variable "api_image" {
-  sensitive = true
-}
-
-variable "api_key" {
-  sensitive = true
-}
-
 variable "api_node_env" {
   default   = "production"
   sensitive = true
 }
 
 variable "api_revision_name" {
-  sensitive = true
-}
-
-variable "api_secret" {
-  sensitive = true
-}
-
-variable "circle_key" {
-  sensitive = true
-}
-
-variable "circle_url" {
-  sensitive = true
-}
-
-variable "sendgrid_key" {
-  sensitive = true
-}
-
-variable "sendgrid_from_email" {
+  default   = "algomart-api"
   sensitive = true
 }
 
@@ -181,78 +113,32 @@ variable "sendgrid_from_email" {
 ##
 
 # Directus will use these to create an "admin" user automatically
-variable "cms_admin_email" {
-  sensitive = true
-}
-
-variable "cms_admin_password" {
-  sensitive = true
-}
 
 variable "cms_database_name" {
   default   = "algorand_marketplace_cms"
   sensitive = true
 }
-
-variable "cms_database_user_name" {
-  sensitive = true
-}
-
-variable "cms_database_user_password" {
-  sensitive = true
-}
-
-variable "cms_domain_mapping" {
-  sensitive = true
-}
-
-variable "cms_image" {
-  sensitive = true
-}
-
-variable "cms_key" {
-  sensitive = true
-}
-
 variable "cms_node_env" {
   default   = "production"
   sensitive = true
 }
 
 variable "cms_revision_name" {
-  sensitive = true
-}
-
-variable "cms_secret" {
-  sensitive = true
-}
-
-variable "cms_storage_bucket" {
+  default   = "algomart-cms"
   sensitive = true
 }
 
 ##
 ## Web service
 ##
-
+/*
 variable "web_domain_mapping" {
   sensitive = true
 }
-
-variable "web_firebase_service_account" {
-  sensitive = true
-}
-
-variable "web_image" {
-  sensitive = true
-}
+*/
 
 variable "web_next_public_3js_debug" {
   default   = ""
-  sensitive = true
-}
-
-variable "web_next_public_firebase_config" {
   sensitive = true
 }
 
@@ -262,5 +148,120 @@ variable "web_node_env" {
 }
 
 variable "web_revision_name" {
+  default = "algomart-web"
   sensitive = true
+}
+
+# Values from secret manager
+
+data "google_secret_manager_secret_version" "algod_host" {
+  secret = "algod_host"
+}
+
+data "google_secret_manager_secret_version" "algod_key" {
+  secret = "algod_key"
+}
+
+data "google_secret_manager_secret_version" "algod_port" {
+  secret = "algod_port"
+}
+
+data "google_secret_manager_secret_version" "api_creator_passphrase" {
+  secret = "api_creator_passphrase"
+}
+
+data "google_secret_manager_secret_version" "api_database_name" {
+  secret = "api_database_name"
+}
+
+data "google_secret_manager_secret_version" "api_database_schema" {
+  secret = "api_database_schema"
+}
+
+data "google_secret_manager_secret_version" "api_database_user_name" {
+  secret = "api_database_user_name"
+}
+
+data "google_secret_manager_secret_version" "api_database_user_password" {
+  secret = "api_database_user_password"
+}
+
+data "google_secret_manager_secret_version" "api_funding_mnemonic" {
+  secret = "api_funding_mnemonic"
+}
+
+data "google_secret_manager_secret_version" "api_key" {
+  secret = "api_key"
+}
+
+data "google_secret_manager_secret_version" "api_secret" {
+  secret = "api_secret"
+}
+
+data "google_secret_manager_secret_version" "circle_key" {
+  secret = "circle_key"
+}
+
+data "google_secret_manager_secret_version" "circle_url" {
+  secret = "circle_url"
+}
+
+data "google_secret_manager_secret_version" "cms_admin_email" {
+  secret = "cms_admin_email"
+}
+
+data "google_secret_manager_secret_version" "cms_admin_password" {
+  secret = "cms_admin_password"
+}
+
+data "google_secret_manager_secret_version" "cms_database_user_name" {
+  secret = "cms_database_user_name"
+}
+
+data "google_secret_manager_secret_version" "cms_database_user_password" {
+  secret = "cms_database_user_password"
+}
+
+data "google_secret_manager_secret_version" "cms_key" {
+  secret = "cms_key"
+}
+
+data "google_secret_manager_secret_version" "cms_secret" {
+  secret = "cms_secret"
+}
+
+data "google_secret_manager_secret_version" "cms_storage_bucket" {
+  secret = "cms_storage_bucket"
+}
+
+data "google_secret_manager_secret_version" "project" {
+  secret = "project"
+}
+
+data "google_secret_manager_secret_version" "sendgrid_key" {
+  secret = "sendgrid_key"
+}
+
+data "google_secret_manager_secret_version" "sendgrid_from_email" {
+  secret = "sendgrid_from_email"
+}
+
+data "google_secret_manager_secret_version" "api_image" {
+  secret = "api_image"
+}
+
+data "google_secret_manager_secret_version" "cms_image" {
+  secret = "cms_image"
+}
+
+data "google_secret_manager_secret_version" "web_image" {
+  secret = "web_image"
+}
+
+data "google_secret_manager_secret_version" "web_next_public_firebase_config" {
+  secret = "web_next_public_firebase_config"
+}
+
+data "google_secret_manager_secret_version" "web-firebase-service-account" {
+  secret = "web-firebase-service-account"
 }

@@ -4,7 +4,7 @@ resource "google_sql_database_instance" "database_server" {
   region           = var.region
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   settings {
@@ -27,11 +27,11 @@ resource "google_sql_database_instance" "database_server" {
 }
 
 resource "google_sql_database" "api_database" {
-  name     = var.api_database_name
+  name     = data.google_secret_manager_secret_version.api_database_name.secret_data
   instance = google_sql_database_instance.database_server.name
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   depends_on = [
@@ -44,7 +44,7 @@ resource "google_sql_database" "cms_database" {
   instance = google_sql_database_instance.database_server.name
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   depends_on = [
@@ -54,12 +54,12 @@ resource "google_sql_database" "cms_database" {
 
 resource "google_sql_user" "api_user" {
   instance = google_sql_database_instance.database_server.name
-  name     = var.api_database_user_name
-  password = var.api_database_user_password
+  name     = data.google_secret_manager_secret_version.api_database_user_name.secret_data
+  password = data.google_secret_manager_secret_version.api_database_user_password.secret_data
 }
 
 resource "google_sql_user" "cms_user" {
   instance = google_sql_database_instance.database_server.name
-  name     = var.cms_database_user_name
-  password = var.cms_database_user_password
+  name     = data.google_secret_manager_secret_version.cms_database_user_name.secret_data
+  password = data.google_secret_manager_secret_version.cms_database_user_password.secret_data
 }
