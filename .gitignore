@@ -145,3 +145,7 @@ config/firebase-config.json
 *.backup
 directus-migrate.json
 
+# Terraform files
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/.terraform
