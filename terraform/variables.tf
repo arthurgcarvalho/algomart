@@ -49,7 +49,7 @@ variable "cms_service_name" {
 }
 
 variable "database_server_name" {
-  default   = "algomart2"
+  default   = "algomart3"
   sensitive = true
 }
 
