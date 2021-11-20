@@ -1,6 +1,6 @@
 <p align="center"><img alt="AlgoMart Logo" src="./AlgoMart-Logo.png" width="400" height="140"></p>
 
-# AlgoMart at Miami University
+# AlgoMart
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)][code of conduct]
 
